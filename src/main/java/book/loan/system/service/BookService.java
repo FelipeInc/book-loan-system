@@ -1,7 +1,6 @@
 package book.loan.system.service;
 
 import book.loan.system.domain.Book;
-import book.loan.system.mapper.BookMapper;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.request.BookPostRequestBody;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,12 @@ public class BookService  {
     }
 
     public Book save(BookPostRequestBody bookPostRequestBody){
-        return bookRepository.save(BookMapper.INSTANCE.toBook(bookPostRequestBody));
+        Book book = Book.builder()
+                .author(bookPostRequestBody.getAuthor())
+                .title(bookPostRequestBody.getTitle())
+                .isbn(bookPostRequestBody.getIsbn())
+                .build();
+        return bookRepository.save(book);
     }
 
 }

@@ -1,6 +1,7 @@
 package book.loan.system.service;
 
 import book.loan.system.domain.Book;
+import book.loan.system.exception.BadRequestException;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.request.BookPostRequestBody;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,9 @@ public class BookService  {
     }
 
     public Book save(BookPostRequestBody bookPostRequestBody){
+        if(bookPostRequestBody.getIsbn().toString().isEmpty()){
+            throw new BadRequestException("The ISBN cannot be Empty");
+        }
         Book book = Book.builder()
                 .author(bookPostRequestBody.getAuthor())
                 .title(bookPostRequestBody.getTitle())

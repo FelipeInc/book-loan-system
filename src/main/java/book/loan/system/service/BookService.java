@@ -27,7 +27,7 @@ public class BookService  {
         }
 
         Book book = Book.builder()
-                .id(bookPostRequestBody.getId())
+                .id(validator.idValidator(bookPostRequestBody.getId()))
                 .author(validator.authorNameValidator(bookPostRequestBody.getAuthor()))
                 .title(validator.bookTitleValidator(bookPostRequestBody.getTitle()))
                 .isbn(validator.isbnValidator(bookPostRequestBody.getIsbn()))

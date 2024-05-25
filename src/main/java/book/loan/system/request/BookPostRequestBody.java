@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class BookPostRequestBody {
-    private Integer id;
     @NotEmpty(message = "The book title cannot be empty")
     @NotNull(message = "The book title cannot be null")
     private String title;

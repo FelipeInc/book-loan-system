@@ -20,31 +20,22 @@ public class Validator {
     }
 
     public String bookTitleValidator(String str) {
-        charValidator.alphanumericValidator(str,
+        String charValidated = charValidator.alphanumericValidator(str,
                 "The book title must be written with alphanumeric characters");
         if (str.length() > maxChar) {
             throw new BadRequestException("The book title must have a maximum of 200 characters");
         }else {
-            return str;
+            return charValidated;
         }
     }
 
     public String authorNameValidator(String str){
-        charValidator.alphanumericValidator(str,
+        String charValidated = charValidator.alphanumericValidator(str,
                 "The author name must be written with alphanumeric characters");
         if (str.length() > maxChar) {
             throw new BadRequestException("The author name must have a maximum of 200 characters" );
         }else {
-            return str;
+            return charValidated;
         }
-    }
-
-    public int idValidator(Integer id){
-        if (id == null){
-            throw new BadRequestException("The book id cannot be null");
-        } else if (id.toString().isEmpty()) {
-            throw new BadRequestException("The book id cannot be empty");
-        }
-        return id;
     }
 }

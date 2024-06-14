@@ -8,7 +8,10 @@ import book.loan.system.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -32,6 +35,11 @@ public class BookService  {
                 .isbn(validator.isbnValidator(bookPostRequestBody.getIsbn()))
                 .build();
         return bookRepository.save(book);
+    }
+
+    public Book findBookDetails(Long id){
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book not Found"));
     }
 
 }

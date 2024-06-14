@@ -30,4 +30,9 @@ public class BookControler {
     public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestBody book){
         return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
     }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Book> findBookDetails(@PathVariable Long id){
+        return ResponseEntity.ok(bookService.findBookDetails(id));
+    }
 }

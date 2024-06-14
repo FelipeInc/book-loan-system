@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Validator {
     CharValidator charValidator = new CharValidator();
-    private final int maxChar = 200;
 
     public Long isbnValidator(Long str) {
         if (str.toString().length() < 13) {
@@ -20,22 +19,14 @@ public class Validator {
     }
 
     public String bookTitleValidator(String str) {
-        String charValidated = charValidator.alphanumericValidator(str,
+        charValidator.alphanumericValidator(str,
                 "The book title must be written with alphanumeric characters");
-        if (str.length() > maxChar) {
-            throw new BadRequestException("The book title must have a maximum of 200 characters");
-        }else {
-            return charValidated;
-        }
+        return str;
     }
 
     public String authorNameValidator(String str){
-        String charValidated = charValidator.alphanumericValidator(str,
+       charValidator.alphanumericValidator(str,
                 "The author name must be written with alphanumeric characters");
-        if (str.length() > maxChar) {
-            throw new BadRequestException("The author name must have a maximum of 200 characters" );
-        }else {
-            return charValidated;
-        }
+            return str;
     }
 }

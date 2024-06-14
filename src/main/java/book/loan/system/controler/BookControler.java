@@ -2,6 +2,7 @@ package book.loan.system.controler;
 
 import book.loan.system.domain.Book;
 import book.loan.system.request.BookPostRequestBody;
+import book.loan.system.request.BookPutRequestBody;
 import book.loan.system.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,18 @@ public class BookControler {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Book> findBookDetails(@PathVariable Long id){
-        return ResponseEntity.ok(bookService.findBookDetails(id));
+        return ResponseEntity.ok(bookService.findBookByIdOrThrowBadRequestException(id));
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateBook(@RequestBody BookPutRequestBody bookPutRequestBody){
+        bookService.updateBook(bookPutRequestBody);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id){
+        bookService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

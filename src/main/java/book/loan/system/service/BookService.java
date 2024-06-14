@@ -4,12 +4,12 @@ import book.loan.system.domain.Book;
 import book.loan.system.exception.BadRequestException;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.request.BookPostRequestBody;
+import book.loan.system.request.BookPutRequestBody;
 import book.loan.system.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,9 +37,23 @@ public class BookService  {
         return bookRepository.save(book);
     }
 
-    public Book findBookDetails(Long id){
+    public Book findBookByIdOrThrowBadRequestException(Long id){
         return bookRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book not Found"));
     }
 
+    public void updateBook(BookPutRequestBody bookPutRequestBody){
+        findBookByIdOrThrowBadRequestException(bookPutRequestBody.getId());
+        Book updatedBook = Book.builder()
+                .id(bookPutRequestBody.getId())
+                .title(bookPutRequestBody.getTitle())
+                .author(bookPutRequestBody.getAuthor())
+                .isbn(bookPutRequestBody.getIsbn())
+                .build();
+        bookRepository.save(updatedBook);
+    }
+
+    public void delete(Long id){
+        bookRepository.delete(findBookByIdOrThrowBadRequestException(id));
+    }
 }

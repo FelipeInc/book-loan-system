@@ -37,13 +37,13 @@ public class BookService  {
         return bookRepository.save(book);
     }
 
-    public Book findBookByIdOrThrowBadRequestException(Long id){
+    public Book findBookByIdOrThrow404(Long id){
         return bookRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book not Found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not Found"));
     }
 
     public void updateBook(BookPutRequestBody bookPutRequestBody){
-        findBookByIdOrThrowBadRequestException(bookPutRequestBody.getId());
+        findBookByIdOrThrow404(bookPutRequestBody.getId());
         Book updatedBook = Book.builder()
                 .id(bookPutRequestBody.getId())
                 .title(bookPutRequestBody.getTitle())
@@ -54,6 +54,6 @@ public class BookService  {
     }
 
     public void delete(Long id){
-        bookRepository.delete(findBookByIdOrThrowBadRequestException(id));
+        bookRepository.delete(findBookByIdOrThrow404(id));
     }
 }

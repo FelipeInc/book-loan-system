@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookLoanUserRepository extends JpaRepository<BookLoanUser, Long> {
 
-    BookLoanUser findByUsername(String username);
+    BookLoanUser findByUsername(String name);
 }

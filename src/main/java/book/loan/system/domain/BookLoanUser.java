@@ -26,24 +26,27 @@ public class BookLoanUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @Column(length = 200)
     private String name;
     @NotNull
-    @Column(length = 200)
     private String username;
     @NotNull
-    @Column(length = 200)
     private String password;
     @NotNull
-    @Column(length = 200)
-    private String authorities;
+    private BookLoanUserRoles authorities;
+
+    public BookLoanUser(String name, String username,String password, BookLoanUserRoles authorities){
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(authorities.split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        if(this.authorities == BookLoanUserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

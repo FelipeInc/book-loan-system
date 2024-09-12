@@ -1,8 +1,8 @@
 package book.loan.system.controler;
 
 import book.loan.system.domain.Book;
-import book.loan.system.request.BookPostRequestBody;
-import book.loan.system.request.BookPutRequestBody;
+import book.loan.system.request.BookPostRequestDTO;
+import book.loan.system.request.BookPutRequestDTO;
 import book.loan.system.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class BookControler {
     }
 
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestBody book){
+    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestDTO book){
         return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
     }
 
@@ -39,7 +39,7 @@ public class BookControler {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateBook(@RequestBody BookPutRequestBody bookPutRequestBody){
+    public ResponseEntity<Void> updateBook(@RequestBody BookPutRequestDTO bookPutRequestBody){
         bookService.updateBook(bookPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

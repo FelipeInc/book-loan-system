@@ -1,23 +1,44 @@
 package book.loan.system.config;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@Log4j2
-@RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Autowired
+    SecurityFilter securityFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -26,23 +47,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        HttpSecurity httpSecurity = http.authorizeHttpRequests((authz) -> authz
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(HttpMethod.POST, "auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/books/V1").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/books/V1").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/books/V1").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                ).httpBasic(withDefaults())
-                .csrf().disable()
-                //((csrf) -> csrf
-                //   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                //   .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                //
-                //.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                //
-                .sessionManagement(
-                        (session) -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        return http.build();
+                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
-
-
-
 

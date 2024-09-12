@@ -3,8 +3,8 @@ package book.loan.system.service;
 import book.loan.system.domain.Book;
 import book.loan.system.exception.BadRequestException;
 import book.loan.system.repository.BookRepository;
-import book.loan.system.request.BookPostRequestBody;
-import book.loan.system.request.BookPutRequestBody;
+import book.loan.system.request.BookPostRequestDTO;
+import book.loan.system.request.BookPutRequestDTO;
 import book.loan.system.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,15 +24,15 @@ public class BookService  {
         return bookRepository.findAll(pageable);
     }
 
-    public Book save(BookPostRequestBody bookPostRequestBody){
-        if(bookPostRequestBody.getIsbn().toString().isEmpty()){
+    public Book save(BookPostRequestDTO bookPostRequestDTO){
+        if(bookPostRequestDTO.isbn().toString().isEmpty()){
             throw new BadRequestException("The ISBN cannot be Empty");
         }
 
         Book book = Book.builder()
-                .author(validator.authorNameValidator(bookPostRequestBody.getAuthor()))
-                .title(validator.bookTitleValidator(bookPostRequestBody.getTitle()))
-                .isbn(validator.isbnValidator(bookPostRequestBody.getIsbn()))
+                .author(validator.authorNameValidator(bookPostRequestDTO.author()))
+                .title(validator.bookTitleValidator(bookPostRequestDTO.author()))
+                .isbn(validator.isbnValidator(bookPostRequestDTO.isbn()))
                 .build();
         return bookRepository.save(book);
     }
@@ -42,13 +42,13 @@ public class BookService  {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not Found"));
     }
 
-    public void updateBook(BookPutRequestBody bookPutRequestBody){
-        findBookByIdOrThrow404(bookPutRequestBody.getId());
+    public void updateBook(BookPutRequestDTO bookPutRequestBody){
+        findBookByIdOrThrow404(bookPutRequestBody.id());
         Book updatedBook = Book.builder()
-                .id(bookPutRequestBody.getId())
-                .title(bookPutRequestBody.getTitle())
-                .author(bookPutRequestBody.getAuthor())
-                .isbn(bookPutRequestBody.getIsbn())
+                .id(bookPutRequestBody.id())
+                .title(bookPutRequestBody.title())
+                .author(bookPutRequestBody.author())
+                .isbn(bookPutRequestBody.isbn())
                 .build();
         bookRepository.save(updatedBook);
     }

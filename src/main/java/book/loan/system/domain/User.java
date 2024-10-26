@@ -30,9 +30,9 @@ public class User implements UserDetails {
     @NotNull
     private String password;
     @NotNull
-    private BookLoanUserRoles authorities;
+    private UserRoles authorities;
 
-    public User(String name, String username, String password, BookLoanUserRoles authorities){
+    public User(String name, String username, String password, UserRoles authorities){
         this.name = name;
         this.username = username;
         this.password = password;
@@ -43,7 +43,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.authorities == BookLoanUserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if(this.authorities == UserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

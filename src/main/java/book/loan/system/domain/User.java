@@ -11,17 +11,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
-public class BookLoanUser implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +32,7 @@ public class BookLoanUser implements UserDetails {
     @NotNull
     private BookLoanUserRoles authorities;
 
-    public BookLoanUser(String name, String username,String password, BookLoanUserRoles authorities){
+    public User(String name, String username, String password, BookLoanUserRoles authorities){
         this.name = name;
         this.username = username;
         this.password = password;

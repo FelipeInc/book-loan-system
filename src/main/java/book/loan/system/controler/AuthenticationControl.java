@@ -1,7 +1,7 @@
 package book.loan.system.controler;
 
 import book.loan.system.config.TokenService;
-import book.loan.system.domain.BookLoanUser;
+import book.loan.system.domain.User;
 import book.loan.system.repository.BookLoanUserRepository;
 import book.loan.system.request.BookLoanUserLoginDTO;
 import book.loan.system.request.BookLoanUserRegisterDTO;
@@ -37,7 +37,7 @@ public class AuthenticationControl {
         var usernamePassword = new UsernamePasswordAuthenticationToken(user.username(), user.password());
         var auth = manager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((BookLoanUser) auth.getPrincipal());
+        var token = tokenService.generateToken((User) auth.getPrincipal());
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
@@ -47,7 +47,7 @@ public class AuthenticationControl {
         if (this.bookLoanUserRepository.findByUsername(userRegister.username()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userRegister.password());
-        BookLoanUser user = new BookLoanUser(userRegister.name(), userRegister.username(), encryptedPassword, userRegister.authorities());
+        User user = new User(userRegister.name(), userRegister.username(), encryptedPassword, userRegister.authorities());
 
         this.bookLoanUserRepository.save(user);
 

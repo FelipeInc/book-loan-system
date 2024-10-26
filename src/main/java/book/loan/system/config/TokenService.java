@@ -1,8 +1,7 @@
 package book.loan.system.config;
 
 
-import book.loan.system.domain.BookLoanUser;
-import book.loan.system.exception.BadRequestException;
+import book.loan.system.domain.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -20,7 +19,7 @@ public class TokenService {
     private String secret;
 
 
-    public String generateToken(BookLoanUser user){
+    public String generateToken(User user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()

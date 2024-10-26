@@ -1,23 +1,20 @@
 package book.loan.system.service;
 
-import book.loan.system.repository.BookLoanUserRepository;
-import lombok.RequiredArgsConstructor;
+import book.loan.system.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class BookLoanUserService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
-    BookLoanUserRepository bookLoanUserRepository;
+    UserRepository bookLoanUserRepository;
     
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return bookLoanUserRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return bookLoanUserRepository.findByEmailIgnoreCase(email);
     }
 }

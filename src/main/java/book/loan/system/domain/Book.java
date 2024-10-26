@@ -1,7 +1,10 @@
 package book.loan.system.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +25,10 @@ public class Book {
     @NotNull
     @Column(length = 200)
     private String author;
-    @NotNull
+    @NotEmpty(message = "The ISBN can't be empty")
+    @NotNull(message = "The ISBN can't be null")
     @Column(unique = true)
-    private Long isbn;
+    @Pattern(regexp = "^[0-9]+$", message = "O campo deve conter apenas números.")
+    @Size(min = 13, max = 13, message = "The ISBN must have 13 numbers")
+    private String isbn;
 }

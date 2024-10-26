@@ -2,6 +2,8 @@ package book.loan.system.domain;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,16 +27,16 @@ public class User implements UserDetails {
     private Long id;
     @NotNull
     private String name;
-    @NotNull
-    private String username;
+    @Column(unique = true)
+    private String email;
     @NotNull
     private String password;
     @NotNull
     private UserRoles authorities;
 
-    public User(String name, String username, String password, UserRoles authorities){
+    public User(String name, String email, String password, UserRoles authorities){
         this.name = name;
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
@@ -54,7 +56,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override

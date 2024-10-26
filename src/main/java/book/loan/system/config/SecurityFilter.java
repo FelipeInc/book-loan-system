@@ -1,11 +1,10 @@
 package book.loan.system.config;
 
-import book.loan.system.repository.BookLoanUserRepository;
+import book.loan.system.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +17,7 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
-    BookLoanUserRepository repository;
+    UserRepository repository;
 
     @Autowired
     TokenService tokenService;
@@ -28,7 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if (token != null){
             var subject = tokenService.validateToken(token);
-            UserDetails user = repository.findByUsername(subject);
+            UserDetails user = repository.findByEmailIgnoreCase(subject);
 
             var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);

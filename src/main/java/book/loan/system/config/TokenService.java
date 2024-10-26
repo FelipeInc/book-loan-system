@@ -2,6 +2,7 @@ package book.loan.system.config;
 
 
 import book.loan.system.domain.User;
+import book.loan.system.exception.ForbiddenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -43,7 +44,7 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException e){
-            return "";
+            throw new ForbiddenException("This user isn't registered");
         }
     }
 

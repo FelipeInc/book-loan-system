@@ -50,11 +50,11 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.POST, "auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/books/V1").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/books/V1").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/books/V1").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "api/v1/books/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/v1/books/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/v1/books/save").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "api/v1/books/update").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "api/v1/books/delete/{id}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

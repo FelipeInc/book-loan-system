@@ -15,10 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("books/V1")
+@RequestMapping("api/v1/books")
 @Log4j2
 @RequiredArgsConstructor
-public class BookControler {
+public class BookController {
     @Autowired
     private final BookService bookService;
 
@@ -27,24 +27,23 @@ public class BookControler {
             return ResponseEntity.ok(bookService.listAll(pageable));
     }
 
-    @PostMapping
+    @PostMapping(path = "/save")
     public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestDTO book){
         return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Book> findBookDetails(@PathVariable Long id){
-
         return ResponseEntity.ok(bookService.findBookByIdOrThrow404(id));
     }
 
-    @PutMapping
+    @PutMapping(path = "/update")
     public ResponseEntity<Void> updateBook(@RequestBody BookPutRequestDTO bookPutRequestBody){
         bookService.updateBook(bookPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id){
         bookService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

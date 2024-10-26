@@ -1,45 +1,40 @@
 package book.loan.system.service;
 
 import book.loan.system.domain.Book;
-import book.loan.system.exception.BadRequestException;
+import book.loan.system.exception.NotFoundException;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.request.BookPostRequestDTO;
 import book.loan.system.request.BookPutRequestDTO;
-import book.loan.system.validator.Validator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class BookService  {
-    private final Validator validator;
     private final BookRepository bookRepository;
 
     public Page<Book> listAll(Pageable pageable){
         return bookRepository.findAll(pageable);
     }
 
-    public Book save(BookPostRequestDTO bookPostRequestDTO){
-        if(bookPostRequestDTO.isbn().toString().isEmpty()){
-            throw new BadRequestException("The ISBN cannot be Empty");
-        }
-
+    public Book save(@Valid BookPostRequestDTO bookPostRequestDTO){
         Book book = Book.builder()
-                .author(validator.authorNameValidator(bookPostRequestDTO.author()))
-                .title(validator.bookTitleValidator(bookPostRequestDTO.author()))
-                .isbn(validator.isbnValidator(bookPostRequestDTO.isbn()))
+                .author(bookPostRequestDTO.author())
+                .title(bookPostRequestDTO.author())
+                .isbn(bookPostRequestDTO.isbn())
                 .build();
         return bookRepository.save(book);
     }
 
     public Book findBookByIdOrThrow404(Long id){
         return bookRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not Found"));
+                .orElseThrow(() -> new NotFoundException("Book not Found"));
     }
 
     public void updateBook(BookPutRequestDTO bookPutRequestBody){

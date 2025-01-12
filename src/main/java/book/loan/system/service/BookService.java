@@ -26,7 +26,7 @@ public class BookService  {
     public Book saveBook(@Valid BookPostRequestDTO bookPostRequestDTO){
         Book book = Book.builder()
                 .author(bookPostRequestDTO.author())
-                .title(bookPostRequestDTO.author())
+                .title(bookPostRequestDTO.title())
                 .isbn(bookPostRequestDTO.isbn())
                 .build();
         return bookRepository.save(book);

@@ -16,13 +16,12 @@ import java.util.UUID;
 @Builder
 public class Loan {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private LocalDate loanDate;
 
-    @OneToOne
-    @JoinColumn(name = "book_rented")
+    @OneToOne(mappedBy = "idLoan", cascade = CascadeType.ALL)
     private Book bookRented;
 
     @ManyToOne

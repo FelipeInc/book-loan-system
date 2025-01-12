@@ -52,9 +52,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.POST, "api/v1/books/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "api/v1/books/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/v1/books").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "api/v1/books/save").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "api/v1/books/update").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "api/v1/books/delete/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "api/v1/books/loan/rent").hasRole("USER")
                         .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

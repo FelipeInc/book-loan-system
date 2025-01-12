@@ -1,9 +1,9 @@
 package book.loan.system.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -25,14 +27,23 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     private String name;
+
     @Column(unique = true)
+    @Email
     private String email;
+
     @NotNull
     private String password;
+
     @NotNull
     private UserRoles authorities;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "userEmail", fetch = FetchType.LAZY)
+    private Set<Loan> loans = new HashSet<>();
 
     public User(String name, String email, String password, UserRoles authorities){
         this.name = name;
@@ -40,6 +51,7 @@ public class User implements UserDetails {
         this.password = password;
         this.authorities = authorities;
     }
+
 
 
 

@@ -29,7 +29,7 @@ public class BookController {
 
     @PostMapping(path = "/save")
     public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestDTO book){
-        return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
+        return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/{id}")

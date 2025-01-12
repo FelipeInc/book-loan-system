@@ -23,7 +23,7 @@ public class BookService  {
         return bookRepository.findAll(pageable);
     }
 
-    public Book save(@Valid BookPostRequestDTO bookPostRequestDTO){
+    public Book saveBook(@Valid BookPostRequestDTO bookPostRequestDTO){
         Book book = Book.builder()
                 .author(bookPostRequestDTO.author())
                 .title(bookPostRequestDTO.author())

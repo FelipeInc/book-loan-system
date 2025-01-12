@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UUID;
 
 @Data
 @AllArgsConstructor
@@ -19,16 +20,22 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Column(length = 200)
     private String title;
+
     @NotNull
     @Column(length = 200)
     private String author;
+
     @NotEmpty(message = "The ISBN can't be empty")
     @NotNull(message = "The ISBN can't be null")
     @Column(unique = true)
     @Pattern(regexp = "^[0-9]+$", message = "O campo deve conter apenas números.")
     @Size(min = 13, max = 13, message = "The ISBN must have 13 numbers")
     private String isbn;
+
+    @OneToOne(mappedBy = "bookRented")
+    private Loan idLoan;
 }

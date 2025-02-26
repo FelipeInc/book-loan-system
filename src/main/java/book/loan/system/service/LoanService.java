@@ -1,13 +1,13 @@
 package book.loan.system.service;
 
+import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
-import book.loan.system.domain.APIClient;
 import book.loan.system.exception.NotFoundException;
-import book.loan.system.repository.LoanRepository;
 import book.loan.system.repository.APIClientRepository;
+import book.loan.system.repository.LoanRepository;
+import book.loan.system.request.LoanDeletePostDTO;
 import book.loan.system.request.LoanPostRequestDTO;
-import book.loan.system.util.GetDate;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class LoanService {
         this.bookService = bookService;
     }
 
-    public Loan findLoanByID(Long id){
+    public Loan findLoanByIDorThrows404(Long id){
         return loanRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Loan not Found"));
     }
@@ -42,6 +42,15 @@ public class LoanService {
 
         loan.setBookRented(book);
         return loanRepository.save(loan);
+    }
+
+    @Transactional
+    public void deleteLoan(LoanDeletePostDTO loanDeletePostDTO){
+        Loan loan = findLoanByIDorThrows404(loanDeletePostDTO.id());
+        loan.setBookRented(null);
+        Book book = bookService.findBookByIdOrThrow404(loanDeletePostDTO.idBook());
+        book.setIdLoan(null);
+        loanRepository.delete(loan);
     }
 
     public LocalDate localDate(){

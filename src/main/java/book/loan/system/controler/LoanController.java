@@ -1,6 +1,7 @@
 package book.loan.system.controler;
 
 import book.loan.system.domain.Loan;
+import book.loan.system.request.LoanDeletePostDTO;
 import book.loan.system.request.LoanPostRequestDTO;
 import book.loan.system.service.LoanService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,14 @@ public class LoanController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Loan> findLoanById(@PathVariable Long id){
-        return ResponseEntity.ok(loanService.findLoanByID(id));
+        return ResponseEntity.ok(loanService.findLoanByIDorThrows404(id));
     }
 
+    @PostMapping(path = "/return/book")
+    public ResponseEntity<Loan> deleteLoan(@RequestBody LoanDeletePostDTO loanDeletePostDTO){
+        loanService.deleteLoan(loanDeletePostDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping(path = "/rent")
     public ResponseEntity<Loan> rent(@RequestBody LoanPostRequestDTO loanPostRequestDTO){

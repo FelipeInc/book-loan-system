@@ -5,15 +5,14 @@ import book.loan.system.domain.Loan;
 import book.loan.system.domain.APIClient;
 import book.loan.system.domain.UserRoles;
 import book.loan.system.exception.NotFoundException;
-import book.loan.system.util.GetDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import util.GetDateTest;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 
 @DataJpaTest
@@ -25,9 +24,6 @@ class LoanRepositoryTest {
     BookRepository bookRepository;
     @Autowired
     LoanRepository loanRepository;
-
-    GetDateTest getDate;
-
 
     @Test
     @DisplayName("Saves Loan When Successful")
@@ -45,30 +41,16 @@ class LoanRepositoryTest {
     }
 
     @Test
-    @DisplayName("Saves persist book when Successful")
-    void save_PersistBook_WhenSuccessful(){
-        Book bookToBeSaved = createBookToBeSaved();
-        Book savedBook = this.bookRepository.save(bookToBeSaved);
-        Assertions.assertThat(savedBook).isNotNull();
-        Assertions.assertThat(savedBook.getId()).isNotNull();
-        Assertions.assertThat(savedBook.getTitle()).isEqualTo(bookToBeSaved.getTitle());
-        Assertions.assertThat(savedBook.getAuthor()).isEqualTo(bookToBeSaved.getAuthor());
-        Assertions.assertThat(savedBook.getIsbn()).isEqualTo(bookToBeSaved.getIsbn());
-    }
+    @DisplayName("Delete removes Loan When Successful")
+    void delete_Removes_Loan_When_Successful(){
+        Loan loanToBeSaved = createLoanToBeSaved();
+        Loan savedLoan = this.loanRepository.save(loanToBeSaved);
 
-    @Test
-    @DisplayName("Save Persist User When Successful")
-    void save_PersistUser_WhenSuccessful(){
-        APIClient userToBeSaved = createUserToBeSaved();
-        APIClient savedUser = this.userRepository.save(userToBeSaved);
+        this.loanRepository.delete(savedLoan);
 
+        Optional<Loan> optionalLoan = this.loanRepository.findById(savedLoan.getId());
+        Assertions.assertThat(optionalLoan).isEmpty();
 
-        Assertions.assertThat(savedUser).isNotNull();
-        Assertions.assertThat(savedUser.getId()).isNotNull();
-        Assertions.assertThat(savedUser.getName()).isEqualTo(userToBeSaved.getName());
-        Assertions.assertThat(savedUser.getEmail()).isEqualTo(userToBeSaved.getEmail());
-        Assertions.assertThat(savedUser.getUserPassword()).isEqualTo(userToBeSaved.getUserPassword());
-        Assertions.assertThat(savedUser.getAuthorities()).isEqualTo(userToBeSaved.getAuthorities());
     }
 
     private Loan createLoanToBeSaved(){

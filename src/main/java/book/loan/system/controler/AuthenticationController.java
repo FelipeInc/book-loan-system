@@ -1,9 +1,9 @@
 package book.loan.system.controler;
 
 import book.loan.system.config.TokenService;
-import book.loan.system.domain.User;
+import book.loan.system.domain.APIClient;
 import book.loan.system.exception.BadRequestException;
-import book.loan.system.repository.UserRepository;
+import book.loan.system.repository.APIClientRepository;
 import book.loan.system.request.UserLoginDTO;
 import book.loan.system.request.UserRegisterDTO;
 import book.loan.system.request.LoginResponseDTO;
@@ -29,7 +29,7 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @Autowired
-    private UserRepository bookLoanUserRepository;
+    private APIClientRepository bookLoanUserRepository;
 
     @Autowired
     private AuthenticationManager manager;
@@ -40,7 +40,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(user.email(), user.password());
         var auth = manager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        var token = tokenService.generateToken((APIClient) auth.getPrincipal());
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
@@ -52,7 +52,7 @@ public class AuthenticationController {
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userRegister.password());
-        User user = new User(userRegister.name(), userRegister.email(), encryptedPassword, userRegister.authorities());
+        APIClient user = new APIClient(userRegister.name(), userRegister.email(), encryptedPassword, userRegister.authorities());
 
         this.bookLoanUserRepository.save(user);
 

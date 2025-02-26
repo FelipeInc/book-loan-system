@@ -23,9 +23,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-public class User implements UserDetails {
+public class APIClient implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull
-    private String password;
+    private String userPassword;
 
     @NotNull
     private UserRoles authorities;
@@ -45,10 +45,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userEmail", fetch = FetchType.LAZY)
     private Set<Loan> loans = new HashSet<>();
 
-    public User(String name, String email, String password, UserRoles authorities){
+    public APIClient(String name, String email, String userPassword, UserRoles authorities){
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.userPassword = userPassword;
         this.authorities = authorities;
     }
 
@@ -61,9 +61,8 @@ public class User implements UserDetails {
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    @Override
     public String getPassword() {
-        return this.password;
+        return this.userPassword;
     }
 
     @Override

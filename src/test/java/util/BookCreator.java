@@ -5,11 +5,12 @@ import book.loan.system.domain.Book;
 public class BookCreator {
 
     public Book createBookToBeSaved(){
-        return Book.builder()
+        Book book = Book.builder()
                 .author("Antoine de Saint-Exupéry")
                 .title("O Pequeno Principe")
                 .isbn("9780152048044")
                 .build();
+        return book;
     }
 
     public Book createValidBook(){

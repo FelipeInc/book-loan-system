@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class Loan {
 
     @ManyToOne
     @JoinColumn(name = "user_email")
-    private User userEmail;
+    private APIClient userEmail;
 
     private LocalDate dateToGiveBack;
 }

@@ -1,6 +1,6 @@
 package book.loan.system.config;
 
-import book.loan.system.repository.UserRepository;
+import book.loan.system.repository.APIClientRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
-    UserRepository repository;
+    APIClientRepository repository;
 
     @Autowired
     TokenService tokenService;

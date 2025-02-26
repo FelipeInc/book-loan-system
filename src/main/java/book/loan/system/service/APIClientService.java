@@ -1,6 +1,6 @@
 package book.loan.system.service;
 
-import book.loan.system.repository.UserRepository;
+import book.loan.system.repository.APIClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
+public class APIClientService implements UserDetailsService {
 
     @Autowired
-    UserRepository bookLoanUserRepository;
+    APIClientRepository bookLoanUserRepository;
     
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

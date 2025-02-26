@@ -1,7 +1,7 @@
 package book.loan.system.config;
 
 
-import book.loan.system.domain.User;
+import book.loan.system.domain.APIClient;
 import book.loan.system.exception.ForbiddenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -20,7 +20,7 @@ public class TokenService {
     private String secret;
 
 
-    public String generateToken(User user){
+    public String generateToken(APIClient user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()

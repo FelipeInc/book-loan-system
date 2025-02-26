@@ -17,7 +17,7 @@ class BookRepositoryTest {
 
     @Test
     @DisplayName("Saves persist book when Successful")
-    void Save_PersistBook_WhenSuccessful(){
+    void save_PersistBook_WhenSuccessful(){
         Book bookToBeSaved = createBookToBeSaved();
         Book savedBook = this.bookRepository.save(bookToBeSaved);
         Assertions.assertThat(savedBook).isNotNull();
@@ -29,7 +29,7 @@ class BookRepositoryTest {
 
     @Test
     @DisplayName("Save updates book when Successful")
-    void Saves_UpdatesBook_WhenSuccessful(){
+    void saves_UpdatesBook_WhenSuccessful(){
         Book bookToBeSaved = createBookToBeSaved();
         Book savedBook = this.bookRepository.save(bookToBeSaved);
 
@@ -48,7 +48,7 @@ class BookRepositoryTest {
 
     @Test
     @DisplayName("Delete removes book when Successful")
-    void Delete_RemovesBook_WhenSuccessful(){
+    void delete_RemovesBook_WhenSuccessful(){
         Book bookToBeSaved = createBookToBeSaved();
         Book savedBook = this.bookRepository.save(bookToBeSaved);
 
@@ -57,10 +57,17 @@ class BookRepositoryTest {
         Assertions.assertThat(bookOptional).isEmpty();
     }
 
+
     private Book createBookToBeSaved(){
         return Book.builder()
                 .author("Antoine de Saint-Exupéry")
                 .title("O Pequeno Principe")
+                .isbn("9780152048044")
+                .build();
+    }
+    private Book createBookWithTitleEmpty(){
+        return Book.builder()
+                .author("Antoine de Saint-Exupéry")
                 .isbn("9780152048044")
                 .build();
     }

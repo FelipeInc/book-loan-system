@@ -2,11 +2,12 @@ package book.loan.system.service;
 
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
-import book.loan.system.domain.User;
+import book.loan.system.domain.APIClient;
 import book.loan.system.exception.NotFoundException;
 import book.loan.system.repository.LoanRepository;
-import book.loan.system.repository.UserRepository;
+import book.loan.system.repository.APIClientRepository;
 import book.loan.system.request.LoanPostRequestDTO;
+import book.loan.system.util.GetDate;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,10 @@ import java.time.LocalDate;
 @Service
 public class LoanService {
     LoanRepository loanRepository;
-    private final UserRepository userRepository;
+    private final APIClientRepository userRepository;
     private final BookService bookService;
 
-    public LoanService(UserRepository userRepository, BookService bookService, LoanRepository loanRepository) {
+    public LoanService(APIClientRepository userRepository, BookService bookService, LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
         this.userRepository = userRepository;
         this.bookService = bookService;
@@ -33,7 +34,7 @@ public class LoanService {
     public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO){
         Loan loan = new Loan();
         loan.setLoanDate(localDate());
-        loan.setUserEmail((User) userRepository.findByEmailIgnoreCase(loanPostRequestDTO.email()));
+        loan.setUserEmail((APIClient) userRepository.findByEmailIgnoreCase(loanPostRequestDTO.email()));
         loan.setDateToGiveBack(localDatePlus30Days());
 
         Book book = bookService.findBookByIdOrThrow404(loanPostRequestDTO.id());

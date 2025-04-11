@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoanController {
     @Autowired
-    private final LoanService loanService;
+    private LoanService loanService;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Loan> findLoanById(@PathVariable Long id){

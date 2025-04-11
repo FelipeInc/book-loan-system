@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BookController {
     @Autowired
-    private final BookService bookService;
+    private BookService bookService;
 
     @GetMapping
     public ResponseEntity<Page<Book>> list(Pageable pageable){

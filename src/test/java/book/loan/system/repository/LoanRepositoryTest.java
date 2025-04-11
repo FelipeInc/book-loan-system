@@ -79,12 +79,12 @@ class LoanRepositoryTest {
     }
 
     private APIClient createUserToBeSaved(){
-        return APIClient.builder()
-                .name("Felipe Silva")
-                .email("Felipe20Silva@gmail.com")
-                .userPassword("123456")
-                .authorities(UserRoles.ADMIN)
-                .build();
+          return APIClient.builder()
+                  .name("Felipe Silva")
+                  .email("Felipe20Silva@gmail.com")
+                  .userPassword("123456")
+                  .authorities(UserRoles.ADMIN)
+                  .build();
     }
     private Book createBookToBeSaved(){
         return Book.builder()

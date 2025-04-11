@@ -22,19 +22,19 @@ public class Book {
     private Long id;
 
     @NotNull(message = "The book title can't be null")
-    @NotEmpty(message = "The book title can't be null")
+    @NotEmpty(message = "The book title can't be Empty")
     @Column(length = 200)
     private String title;
 
     @NotNull(message = "The author name can't be null")
-    @NotEmpty(message = "The author name can't be null")
+    @NotEmpty(message = "The author name can't be Empty")
     @Column(length = 200)
     private String author;
 
     @NotEmpty(message = "The ISBN can't be empty")
     @NotNull(message = "The ISBN can't be null")
     @Column(unique = true)
-    @Pattern(regexp = "^[0-9]+$", message = "This field must contain only numbers ")
+    @Pattern(regexp = "^[0-9]+$", message = "This field must contain only numbers")
     @Size(min = 13, max = 13, message = "The ISBN must have 13 numbers")
     private String isbn;
 
@@ -42,4 +42,5 @@ public class Book {
     @OneToOne
     @JoinColumn(name = "loan_id")
     private Loan idLoan;
+
 }

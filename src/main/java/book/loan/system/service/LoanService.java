@@ -25,13 +25,13 @@ public class LoanService {
         this.bookService = bookService;
     }
 
-    public Loan findLoanByIDorThrows404(Long id){
+    public Loan findLoanByIDorThrows404(Long id) {
         return loanRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Loan not Found"));
     }
 
     @Transactional
-    public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO){
+    public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO) {
         Loan loan = new Loan();
         loan.setLoanDate(localDate());
         loan.setUserEmail((APIClient) userRepository.findByEmailIgnoreCase(loanPostRequestDTO.email()));
@@ -45,19 +45,21 @@ public class LoanService {
     }
 
     @Transactional
-    public void deleteLoan(LoanDeletePostDTO loanDeletePostDTO){
+    public void deleteLoan(LoanDeletePostDTO loanDeletePostDTO) {
         Loan loan = findLoanByIDorThrows404(loanDeletePostDTO.id());
         loan.setBookRented(null);
+
         Book book = bookService.findBookByIdOrThrow404(loanDeletePostDTO.idBook());
         book.setIdLoan(null);
+
         loanRepository.delete(loan);
     }
 
-    public LocalDate localDate(){
+    public LocalDate localDate() {
         return LocalDate.now();
     }
 
-    public LocalDate localDatePlus30Days(){
+    public LocalDate localDatePlus30Days() {
         return LocalDate.now().plusDays(30);
 
     }

@@ -4,6 +4,7 @@ package book.loan.system.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,14 +29,12 @@ public class APIClient implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     private String name;
 
     @Column(unique = true)
     @Email
     private String email;
 
-    @NotNull
     private String userPassword;
 
     @NotNull

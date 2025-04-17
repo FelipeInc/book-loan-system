@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.CacheRequest;
+
 @RestController
 @RequestMapping("api/v1/books")
 @Log4j2
@@ -23,28 +25,28 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    public ResponseEntity<Page<Book>> list(Pageable pageable){
-            return ResponseEntity.ok(bookService.listAll(pageable));
+    public ResponseEntity<Page<Book>> list(Pageable pageable) {
+        return ResponseEntity.ok(bookService.listAll(pageable));
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestDTO book){
+    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestDTO book) {
         return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Book> findBookDetails(@PathVariable Long id){
+    public ResponseEntity<Book> findBookDetails(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.findBookByIdOrThrow404(id));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Void> updateBook(@RequestBody BookPutRequestDTO bookPutRequestBody){
+    public ResponseEntity<Void> updateBook(@RequestBody @Valid BookPutRequestDTO bookPutRequestBody) {
         bookService.updateBook(bookPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id){
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

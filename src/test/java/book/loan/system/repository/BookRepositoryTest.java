@@ -8,13 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Optional;
 
 @DataJpaTest
 @DisplayName("Tests for Book Repository")
-
 class BookRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
@@ -38,17 +36,19 @@ class BookRepositoryTest {
         Book bookToBeSaved = BookCreator.createBookToBeSaved();
         Book savedBook = this.bookRepository.save(bookToBeSaved);
 
-        savedBook.setTitle("O Pequeno Principe");
-        savedBook.setAuthor( "William Shakespeare");
-        savedBook.setIsbn("9780340153918");
-
-        Book updatedBook = this.bookRepository.save(savedBook);
+        Book updatedBookCreated = BookCreator.createUpdatedBook();
+        Book updatedBook = this.bookRepository.save(updatedBookCreated);
 
         Assertions.assertThat(updatedBook).isNotNull();
         Assertions.assertThat(updatedBook.getId()).isNotNull();
-        Assertions.assertThat(updatedBook.getTitle()).isEqualTo(savedBook.getTitle());
-        Assertions.assertThat(updatedBook.getAuthor()).isEqualTo(savedBook.getAuthor());
-        Assertions.assertThat(updatedBook.getIsbn()).isEqualTo(savedBook.getIsbn());
+        Assertions.assertThat(updatedBook.getTitle()).isEqualTo(updatedBookCreated.getTitle());
+        Assertions.assertThat(updatedBook.getAuthor()).isEqualTo(updatedBookCreated.getAuthor());
+        Assertions.assertThat(updatedBook.getIsbn()).isEqualTo(updatedBookCreated.getIsbn());
+
+
+        Assertions.assertThat(updatedBook.getTitle()).isNotEqualTo(savedBook.getTitle());
+        Assertions.assertThat(updatedBook.getAuthor()).isNotEqualTo(savedBook.getAuthor());
+        Assertions.assertThat(updatedBook.getIsbn()).isNotEqualTo(savedBook.getIsbn());
     }
 
     @Test

@@ -58,6 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "api/v1/books/delete/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "api/v1/books/loan/rent").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "api/v1/books/loan/return/book").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET,"api/v1/books/loan/find").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "api/v1/books/auth/find").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

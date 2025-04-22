@@ -1,5 +1,9 @@
 package book.loan.system.domain;
 
+
+import lombok.Getter;
+
+@Getter
 public enum UserRoles {
     ADMIN("admin"),
 
@@ -11,7 +15,4 @@ public enum UserRoles {
         this.role = role;
     }
 
-    public String getRole(){
-        return role;
-    }
 }

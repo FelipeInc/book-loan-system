@@ -19,7 +19,7 @@ public record UserRegisterDTO(
         @NotNull(message = "This field can't be empty")
         String password,
 
-        @NotEmpty(message = "This field can't be empty")
+
         @NotNull(message = "This field can't be empty")
         UserRoles authorities) {
 

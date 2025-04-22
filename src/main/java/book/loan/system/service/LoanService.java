@@ -4,25 +4,30 @@ import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
 import book.loan.system.exception.NotFoundException;
-import book.loan.system.repository.APIClientRepository;
 import book.loan.system.repository.LoanRepository;
-import book.loan.system.request.LoanDeletePostDTO;
+import book.loan.system.request.LoanDeleteRequestDTO;
 import book.loan.system.request.LoanPostRequestDTO;
+import book.loan.system.util.DateUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 
+@Validated
+@RequiredArgsConstructor
 @Service
 public class LoanService {
-    LoanRepository loanRepository;
-    private final APIClientRepository userRepository;
+    private final LoanRepository loanRepository;
+
+    private final APIClientService apiClientService;
     private final BookService bookService;
 
-    public LoanService(APIClientRepository userRepository, BookService bookService, LoanRepository loanRepository) {
-        this.loanRepository = loanRepository;
-        this.userRepository = userRepository;
-        this.bookService = bookService;
+    public Page<Loan> findAllLoans(Pageable pageable) {
+        return loanRepository.findAll(pageable);
     }
 
     public Loan findLoanByIDorThrows404(Long id) {
@@ -32,35 +37,32 @@ public class LoanService {
 
     @Transactional
     public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO) {
-        Loan loan = new Loan();
-        loan.setLoanDate(localDate());
-        loan.setUserEmail((APIClient) userRepository.findByEmailIgnoreCase(loanPostRequestDTO.email()));
-        loan.setDateToGiveBack(localDatePlus30Days());
+        APIClient clientFound = apiClientService.findUserByIdOrThrowNotFoundException(loanPostRequestDTO.email());
 
         Book book = bookService.findBookByIdOrThrow404(loanPostRequestDTO.id());
-        book.setIdLoan(loan);
 
-        loan.setBookRented(book);
-        return loanRepository.save(loan);
+        Loan loan = Loan.builder()
+                .userEmail(clientFound)
+                .loanDate(DateUtil.localDate())
+                .dateToGiveBack(DateUtil.localDatePlus30Days())
+                .bookRented(book)
+                .build();
+        Loan loanSaved = loanRepository.save(loan);
+
+        bookService.rentABook(loanPostRequestDTO.id(), loan);
+
+        return loanSaved;
     }
 
     @Transactional
-    public void deleteLoan(LoanDeletePostDTO loanDeletePostDTO) {
-        Loan loan = findLoanByIDorThrows404(loanDeletePostDTO.id());
-        loan.setBookRented(null);
+    public void deleteLoan(LoanDeleteRequestDTO loanDeletePostDTO) {
+        bookService.returnABook(loanDeletePostDTO.idBook());
 
-        Book book = bookService.findBookByIdOrThrow404(loanDeletePostDTO.idBook());
-        book.setIdLoan(null);
+        Loan loan = findLoanByIDorThrows404(loanDeletePostDTO.idLoan());
+        loan.setBookRented(null);
 
         loanRepository.delete(loan);
     }
 
-    public LocalDate localDate() {
-        return LocalDate.now();
-    }
 
-    public LocalDate localDatePlus30Days() {
-        return LocalDate.now().plusDays(30);
-
-    }
 }

@@ -29,15 +29,21 @@ public class APIClient implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotEmpty(message = "This field can't be empty")
+    @NotNull(message = "This field can't be empty")
     private String name;
 
+    @NotEmpty(message = "Email is required")
+    @NotNull(message = "Email is required")
+    @Email(message = "Enter a valid email address")
     @Column(unique = true)
-    @Email
     private String email;
 
+    @NotEmpty(message = "This field can't be empty")
+    @NotNull(message = "This field can't be empty")
     private String userPassword;
 
-    @NotNull
+    @NotNull(message = "This field can't be empty")
     private UserRoles authorities;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

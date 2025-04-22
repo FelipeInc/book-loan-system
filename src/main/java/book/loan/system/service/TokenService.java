@@ -1,4 +1,4 @@
-package book.loan.system.config;
+package book.loan.system.service;
 
 
 import book.loan.system.domain.APIClient;
@@ -46,7 +46,6 @@ public class TokenService {
             throw new ForbiddenException("This user isn't registered");
         }
     }
-
     private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-3"));
     }

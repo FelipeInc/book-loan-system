@@ -1,21 +1,18 @@
 package book.loan.system.repository;
 
 import book.loan.system.domain.APIClient;
-import book.loan.system.domain.UserRoles;
+import book.loan.system.util.APIClientCreator;
 import jakarta.validation.ConstraintViolationException;
-import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Optional;
 
 @DataJpaTest
 @DisplayName("User Repository Test")
-@Log4j2
 class APIClientRepositoryTest {
 
     @Autowired
@@ -24,7 +21,7 @@ class APIClientRepositoryTest {
     @Test
     @DisplayName("Save Persist User When Successful")
     void save_PersistUser_WhenSuccessful() {
-        APIClient userToBeSaved = createUserToBeSaved();
+        APIClient userToBeSaved = APIClientCreator.createUserToBeSaved();
         APIClient savedUser = this.apiClientRepository.save(userToBeSaved);
 
         Assertions.assertThat(savedUser).isNotNull();
@@ -38,7 +35,7 @@ class APIClientRepositoryTest {
     @Test
     @DisplayName("Delete removes user when Successful")
     void delete_RemovesUser_WhenSuccessful() {
-        APIClient userToBeSaved = createUserToBeSaved();
+        APIClient userToBeSaved = APIClientCreator.createUserToBeSaved();
         APIClient savedUser = this.apiClientRepository.save(userToBeSaved);
         this.apiClientRepository.delete(savedUser);
         Optional<APIClient> userOptional = this.apiClientRepository.findById(savedUser.getId());
@@ -48,66 +45,37 @@ class APIClientRepositoryTest {
     @Test
     @DisplayName("Save Throw ConstraintViolationException When Name is Empty")
     void save_ThrowConstraintViolationException_WhenNameIsEmpty() {
-        APIClient userWithNameEmpty = createUserWithNameEmpty();
+        APIClient userWithNameEmpty = APIClientCreator.createUserWithNameEmpty();
+
+        Assertions.assertThat(userWithNameEmpty.getName()).isNull();
 
         Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> this.apiClientRepository.save(userWithNameEmpty))
-                .withMessageContaining("This Field can't be empty");
+                .isThrownBy(() -> this.apiClientRepository.saveAndFlush(userWithNameEmpty))
+                .withMessageContaining("This field can't be empty");
     }
 
     @Test
     @DisplayName("Save Throw ConstraintViolationException When Email is Empty")
     void save_ThrowConstraintViolationException_WhenEmailIsEmpty() {
-        APIClient userWithEmailEmpty = createUserWithEmailEmpty();
+        APIClient userWithEmailEmpty = APIClientCreator.createUserWithEmailEmpty();
+
+        Assertions.assertThat(userWithEmailEmpty.getEmail()).isEmpty();
 
         Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> this.apiClientRepository.save(userWithEmailEmpty))
-                .withMessageContaining("This Field can't be empty");
+                .isThrownBy(() -> this.apiClientRepository.saveAndFlush(userWithEmailEmpty))
+                .withMessageContaining("Email is required");
     }
 
     @Test
     @DisplayName("Save Throw ConstraintViolationException When Password is Empty")
     void save_ThrowConstraintViolationException_WhenPasswordIsEmpty() {
-        APIClient userWithPasswordEmpty = createUserWithPasswordEmpty();
+        APIClient userWithPasswordEmpty = APIClientCreator.createUserWithPasswordEmpty();
+
+        Assertions.assertThat(userWithPasswordEmpty.getPassword()).isEmpty();
 
         Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> this.apiClientRepository.save(userWithPasswordEmpty))
-                .withMessageContaining("This Field can't be empty");
+                .isThrownBy(() -> this.apiClientRepository.saveAndFlush(userWithPasswordEmpty))
+                .withMessageContaining("This field can't be empty");
     }
 
-    private APIClient createUserToBeSaved() {
-        return APIClient.builder()
-                .name("Felipe Silva")
-                .email("Felipe20Silva@gmail.com")
-                .userPassword("123456")
-                .authorities(UserRoles.ADMIN)
-                .build();
-    }
-
-    private APIClient createUserWithPasswordEmpty() {
-        return APIClient.builder()
-                .name("Felipe Silva")
-                .email("Felipe20Silva@gmail.com")
-                .userPassword("")
-                .authorities(UserRoles.ADMIN)
-                .build();
-    }
-
-    private APIClient createUserWithEmailEmpty() {
-        return APIClient.builder()
-                .name("Felipe Silva")
-                .email("")
-                .userPassword("123456")
-                .authorities(UserRoles.ADMIN)
-                .build();
-    }
-
-    private APIClient createUserWithNameEmpty() {
-        return APIClient.builder()
-                .name("")
-                .email("Felipe20Silva@gmail.com")
-                .userPassword("123456")
-                .authorities(UserRoles.ADMIN)
-                .build();
-    }
 }

@@ -6,9 +6,10 @@ import book.loan.system.util.BookCreator;
 public class BookPutRequestDTOCreator {
     public static BookPutRequestDTO createBookPutrequestDto() {
         return BookPutRequestDTO.builder()
-                .title(BookCreator.createBookToBeSaved().getTitle())
-                .author(BookCreator.createBookToBeSaved().getAuthor())
-                .isbn(BookCreator.createBookToBeSaved().getIsbn())
+                .id(BookCreator.createValidBook().getId())
+                .title(BookCreator.createValidBook().getTitle())
+                .author(BookCreator.createValidBook().getAuthor())
+                .isbn(BookCreator.createValidBook().getIsbn())
                 .build();
     }
 }

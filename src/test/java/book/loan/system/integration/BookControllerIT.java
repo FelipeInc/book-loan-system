@@ -1,77 +1,77 @@
 package book.loan.system.integration;
 
+import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.repository.APIClientRepository;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.util.APIClientCreator;
 import book.loan.system.util.BookCreator;
-import book.loan.system.wrapper.PageableResponse;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@AutoConfigureMockMvc
 public class BookControllerIT {
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private BookRepository bookRepository;
+
     @Autowired
     private APIClientRepository apiClientRepository;
 
-    @Autowired
-    @Qualifier(value = "testRestTemplateRoleUser")
-    private TestRestTemplate testRestTemplate;
+    @BeforeEach
+    void setup() {
+        bookRepository.deleteAll();
+        apiClientRepository.deleteAll();
 
-
-    @TestConfiguration
-    @Lazy
-    static class config{
-        @Bean(name = "testRestTemplateRoleUser")
-        public TestRestTemplate testRestTemplateRoleUserCreator(@Value("${local.server.port}") int port){
-            RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
-                    .rootUri("http://localhost:"+port)
-                    .basicAuthentication("felipe20@gmail.com", "123456");
-            return new TestRestTemplate(restTemplateBuilder);
-        }
+        APIClient testUser = APIClientCreator.createValidAPIClient();
+        apiClientRepository.save(testUser);
     }
 
     @Test
-    @DisplayName("List Returns List Of Book Inside Page Object When Successful")
-    void list_ReturnsListOfBookInsidePageObjects_WhenSuccessful(){
-        apiClientRepository.save(APIClientCreator.createUserToBeSaved());
+    @DisplayName("List returns list of book inside page object when successful")
+    @WithMockUser(username = "Felipe20@gmail.com", password = "123456")
+    void list_ReturnsListOfBookInsidePageObjects_WhenSuccessful() throws Exception{
+        Book validBook = BookCreator.createBookToBeSaved();
+        bookRepository.save(validBook);
 
-        Book savedBook = bookRepository.save(BookCreator.createBookToBeSaved());
 
-        Long expectedId = savedBook.getId();
-        String expectedTitle = savedBook.getTitle();
-        String expectedAuthor = savedBook.getAuthor();
-        String expectedISBN = savedBook.getIsbn();
+        mockMvc.perform(get("/api/v1/books")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].title").value(BookCreator.createValidBook().getTitle()))
+                .andExpect(jsonPath("$.content[0].author").value(BookCreator.createValidBook().getAuthor()))
+                .andExpect(jsonPath("$.content[0].isbn").value(BookCreator.createValidBook().getIsbn()));
+    }
 
-        PageableResponse<Book> bookPage = testRestTemplate.exchange("/api/v1/books", HttpMethod.GET, null,
-                new ParameterizedTypeReference<PageableResponse<Book>>() {
-                }).getBody();
+    @Test
+    @DisplayName("List returns empty list when successful")
+    @WithMockUser(username = "Felipe20@gmail.com", password = "123456")
+    void list_ReturnsEmptyList_WhenSuccessful() throws Exception{
+        Book validBook = BookCreator.createBookToBeSaved();
+        bookRepository.save(validBook);
 
-        Assertions.assertThat(bookPage).isNotNull();
-        Assertions.assertThat(bookPage.toList())
-                .isNotEmpty()
-                .hasSize(1);
-        Assertions.assertThat(bookPage.toList().getFirst().getTitle()).isEqualTo(expectedTitle);
-        Assertions.assertThat(bookPage.toList().getFirst().getAuthor()).isEqualTo(expectedAuthor);
-        Assertions.assertThat(bookPage.toList().getFirst().getId()).isEqualTo(expectedId);
-        Assertions.assertThat(bookPage.toList().getFirst().getIsbn()).isEqualTo(expectedISBN);
 
+        mockMvc.perform(get("/api/v1/books")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(1));
     }
 }

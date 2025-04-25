@@ -3,8 +3,8 @@ package book.loan.system.controler;
 import book.loan.system.service.TokenService;
 import book.loan.system.domain.APIClient;
 import book.loan.system.request.LoginResponseDTO;
-import book.loan.system.request.UserLoginDTO;
-import book.loan.system.request.UserRegisterDTO;
+import book.loan.system.request.APIClientLoginRequestDTO;
+import book.loan.system.request.APIClientRegisterRequestDTO;
 import book.loan.system.service.APIClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +31,8 @@ public class AuthenticationController {
 
     private final AuthenticationManager manager;
 
-    @GetMapping(path = "/find")
-    public ResponseEntity<Page<APIClient>> findUsers(Pageable pageable){
-        return ResponseEntity.ok(apiUserService.findAllUsers(pageable));
-    }
-
     @PostMapping(path = "/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid UserLoginDTO user) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid APIClientLoginRequestDTO user) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(user.email(), user.password());
         var auth = manager.authenticate(usernamePassword);
 
@@ -47,7 +42,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<APIClient> register(@RequestBody @Valid UserRegisterDTO userRegister) {
+    public ResponseEntity<APIClient> register(@RequestBody @Valid APIClientRegisterRequestDTO userRegister) {
         return new ResponseEntity<>(apiUserService.registerUser(userRegister), HttpStatus.CREATED);
     }
 }

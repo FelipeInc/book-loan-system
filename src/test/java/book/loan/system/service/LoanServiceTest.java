@@ -2,11 +2,10 @@ package book.loan.system.service;
 
 import book.loan.system.DTO.LoanDeleteRequestDTOCreator;
 import book.loan.system.DTO.LoanPostRequestDTOCreator;
-import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
+import book.loan.system.exception.NotFoundException;
 import book.loan.system.repository.LoanRepository;
-import book.loan.system.request.LoanDeleteRequestDTO;
 import book.loan.system.util.APIClientCreator;
 import book.loan.system.util.BookCreator;
 import book.loan.system.util.LoanCreator;
@@ -56,7 +55,7 @@ class LoanServiceTest {
         BDDMockito.when(bookServiceMock.findBookByIdOrThrow404(ArgumentMatchers.anyLong()))
                         .thenReturn(BookCreator.createValidBook());
 
-        BDDMockito.when(apiClientService.findUserByIdOrThrowNotFoundException(ArgumentMatchers.anyString()))
+        BDDMockito.when(apiClientService.findUserByEmailOrThrowNotFoundException(ArgumentMatchers.anyString()))
                         .thenReturn(APIClientCreator.createValidAPIClient());
 
         BDDMockito.doNothing().when(bookServiceMock).returnABook(ArgumentMatchers.anyLong());
@@ -74,7 +73,7 @@ class LoanServiceTest {
         LocalDate expectedLoanDate = LoanCreator.createValidLoan().getLoanDate();
         LocalDate expectedReturnBookDate = LoanCreator.createValidLoan().getDateToGiveBack();
         Book expectedBook = LoanCreator.createValidLoan().getBookRented();
-        APIClient expectedAPIClient = LoanCreator.createValidLoan().getUserEmail();
+        book.loan.system.domain.APIClient expectedAPIClient = LoanCreator.createValidLoan().getUserEmail();
 
         Page<Loan> loanPage = loanService.findAllLoans(PageRequest.of(1,1));
 
@@ -96,7 +95,7 @@ class LoanServiceTest {
         LocalDate expectedLoanDate = LoanCreator.createValidLoan().getLoanDate();
         LocalDate expectedReturnBookDate = LoanCreator.createValidLoan().getDateToGiveBack();
         Book expectedBook = LoanCreator.createValidLoan().getBookRented();
-        APIClient expectedAPIClient = LoanCreator.createValidLoan().getUserEmail();
+        book.loan.system.domain.APIClient expectedAPIClient = LoanCreator.createValidLoan().getUserEmail();
 
         Loan loan = loanService.findLoanByIDorThrows404(1L);
 
@@ -106,6 +105,17 @@ class LoanServiceTest {
         Assertions.assertThat(loan.getDateToGiveBack()).isEqualTo(expectedReturnBookDate);
         Assertions.assertThat(loan.getBookRented()).isEqualTo(expectedBook);
         Assertions.assertThat(loan.getUserEmail()).isEqualTo(expectedAPIClient);
+    }
+
+    @Test
+    @DisplayName("FindBookByIdOrThrow404 throw404 When book is not found")
+    void findBookByIdOrThrow404_Throws404_WhenLoanIsNotFound() {
+        BDDMockito.when(loanRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(()->loanService.findLoanByIDorThrows404(1L))
+                .withMessageContaining("Loan not Found");
     }
 
     @Test

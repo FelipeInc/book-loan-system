@@ -23,7 +23,6 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public Page<Book> listAll(Pageable pageable) {
-
         return bookRepository.findAll(pageable);
     }
 

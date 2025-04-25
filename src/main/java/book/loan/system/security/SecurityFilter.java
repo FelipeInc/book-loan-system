@@ -1,4 +1,4 @@
-package book.loan.system.config;
+package book.loan.system.security;
 
 import book.loan.system.repository.APIClientRepository;
 import book.loan.system.service.TokenService;

@@ -64,7 +64,4 @@ class TokenServiceTest {
                 .doesNotThrowAnyException();
         Assertions.assertThat(validatedToken).isEqualTo(APIClientCreator.createValidAPIClient().getEmail());
     }
-
-
-
 }

@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
@@ -51,7 +52,7 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("List Returns List Of Book Inside Page Object When Successful")
+    @DisplayName("List returns list of book inside page object when successful")
     void list_ReturnsListOfBookInsidePageObjects_WhenSuccessful(){
         Long expectedId = BookCreator.createValidBook().getId();
         String expectedTitle = BookCreator.createValidBook().getTitle();
@@ -68,6 +69,21 @@ class BookControllerTest {
         Assertions.assertThat(bookPage.toList().getFirst().getAuthor()).isEqualTo(expectedAuthor);
         Assertions.assertThat(bookPage.toList().getFirst().getId()).isEqualTo(expectedId);
         Assertions.assertThat(bookPage.toList().getFirst().getIsbn()).isEqualTo(expectedISBN);
+
+    }
+
+    @Test
+    @DisplayName("List Returns a empty list when has not book")
+    void list_ReturnsEmptyList_WhenSuccessful(){
+        PageImpl<Book> emptyList = new PageImpl<>(Collections.emptyList());
+        BDDMockito.when(bookServiceMock.listAll(ArgumentMatchers.any()))
+                .thenReturn(emptyList);
+
+
+        Page<Book> books = bookController.list(null).getBody();
+        Assertions.assertThat(books).isNotNull();
+        Assertions.assertThat(books.toList())
+                .isEmpty();
 
     }
 

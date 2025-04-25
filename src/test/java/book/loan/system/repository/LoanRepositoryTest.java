@@ -1,6 +1,5 @@
 package book.loan.system.repository;
 
-import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
 import book.loan.system.exception.NotFoundException;
@@ -55,7 +54,7 @@ class LoanRepositoryTest {
     }
 
     private Loan createLoanToBeSaved() {
-        APIClient saveUser = this.userRepository.save(APIClientCreator.createUserToBeSaved());
+        book.loan.system.domain.APIClient saveUser = this.userRepository.save(APIClientCreator.createUserToBeSaved());
 
         Book savedBook = this.bookRepository.save(BookCreator.createBookToBeSaved());
 

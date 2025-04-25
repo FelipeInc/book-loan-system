@@ -7,7 +7,7 @@ public class APIClientCreator {
     public static APIClient createUserToBeSaved() {
     return APIClient.builder()
             .name("Felipe Silva")
-            .email("Felipe20@gmail.com")
+            .email("Felipe20Silva@gmail.com")
             .userPassword("123456")
             .authorities(UserRoles.ADMIN)
             .build();

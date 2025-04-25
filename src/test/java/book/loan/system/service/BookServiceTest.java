@@ -3,6 +3,8 @@ package book.loan.system.service;
 import book.loan.system.DTO.BookPostRequestDTOCreator;
 import book.loan.system.DTO.BookPutRequestDTOCreator;
 import book.loan.system.domain.Book;
+import book.loan.system.exception.BadRequestException;
+import book.loan.system.exception.NotFoundException;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.util.BookCreator;
 import book.loan.system.util.LoanCreator;
@@ -85,6 +87,17 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("FindBookByIdOrThrow404 throw404 When book is not found")
+    void findBookByIdOrThrow404_Throws404_WhenBookIsNotFound() {
+        BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(()->bookService.findBookByIdOrThrow404(1L))
+                .withMessageContaining("Book not Found");
+    }
+
+    @Test
     @DisplayName("Save Returns Book When Successful")
     void save_ReturnsBook_WhenSuccessful() {
         Book book = bookService.saveBook(BookPostRequestDTOCreator.createBookPostrequestDto());
@@ -116,6 +129,43 @@ class BookServiceTest {
 
         Assertions.assertThatCode(() -> bookService.rentABook(1L, LoanCreator.createValidLoan()))
                 .doesNotThrowAnyException();
+    }
+    @Test
+    @DisplayName("rentABook Throw BadRequestException when book is already rented")
+    void rentABook_ThrowBadRequestException_WhenBookIsAlreadyRented() {
+        BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(BookCreator.createBookRented()));
+
+        BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
+                .thenReturn(BookCreator.createBookRented());
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(()-> bookService.rentABook(1L, LoanCreator.createValidLoan()))
+                .withMessageContaining("This book is already rented");
+    }
+
+    @Test
+    @DisplayName("returnABook update idLoan when successful")
+    void returnABook_UpdateIdLoan_WhenSuccessful() {
+        BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
+            .thenReturn(Optional.of(BookCreator.createBookRented()));
+
+        BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
+                .thenReturn(BookCreator.createBookRented());
+
+        Assertions.assertThatCode(() -> bookService.returnABook(1L))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("rentABook Throw BadRequestException when book has not been rented")
+    void returnABook_ThrowBadRequestException_WhenBookHasNotBeenRented() {
+        BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
+                .thenReturn(BookCreator.createBookRented());
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> bookService.returnABook(1L))
+                .withMessageContaining("This book has not been rented");
     }
 
 

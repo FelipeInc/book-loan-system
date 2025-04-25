@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
-
 @Validated
 @RequiredArgsConstructor
 @Service
@@ -37,7 +35,7 @@ public class LoanService {
 
     @Transactional
     public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO) {
-        APIClient clientFound = apiClientService.findUserByIdOrThrowNotFoundException(loanPostRequestDTO.email());
+        APIClient clientFound = apiClientService.findUserByEmailOrThrowNotFoundException(loanPostRequestDTO.email());
 
         Book book = bookService.findBookByIdOrThrow404(loanPostRequestDTO.id());
 

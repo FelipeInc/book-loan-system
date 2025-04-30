@@ -37,6 +37,11 @@ public class BookController {
         return ResponseEntity.ok(bookService.findBookByIdOrThrow404(id));
     }
 
+    @GetMapping(path = "/find/{title}")
+    public ResponseEntity<Book> findBookByTitle (@PathVariable String title) {
+        return ResponseEntity.ok(bookService.findBookByTitleOrThrow404(title));
+    }
+
     @PutMapping(path = "/update")
     public ResponseEntity<Void> updateBook(@RequestBody @Valid BookPutRequestDTO bookPutRequestBody) {
         bookService.updateBook(bookPutRequestBody);

@@ -7,8 +7,6 @@ import book.loan.system.repository.APIClientRepository;
 import book.loan.system.request.APIClientRegisterRequestDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

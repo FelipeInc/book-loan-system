@@ -16,6 +16,15 @@ public class BookCreator {
                 .build();
     }
 
+
+    public static Book createBookToBeSavedLoanControllerTestIT(){
+        return Book.builder()
+                .author("Antoine de Saint-Exupéry")
+                .title("bookTest")
+                .isbn("9780152048044")
+                .build();
+    }
+
     public static Book createValidBook(){
         return Book.builder()
                 .id(1L)

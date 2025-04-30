@@ -6,8 +6,17 @@ import book.loan.system.domain.UserRoles;
 public class APIClientCreator {
     public static APIClient createUserToBeSaved() {
     return APIClient.builder()
-            .name("Felipe Silva")
-            .email("Felipe20Silva@gmail.com")
+            .name("test")
+            .email("testForAuthenticationControllerIT@gmail.com")
+            .userPassword("123456")
+            .authorities(UserRoles.ADMIN)
+            .build();
+}
+
+public static APIClient createUserToBeSavedLoanControlerTestIT() {
+    return APIClient.builder()
+            .name("test")
+            .email("testForLoanControllerIT@gmail.com")
             .userPassword("123456")
             .authorities(UserRoles.ADMIN)
             .build();

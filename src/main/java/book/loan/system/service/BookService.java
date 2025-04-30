@@ -10,6 +10,7 @@ import book.loan.system.request.BookPutRequestDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @RequiredArgsConstructor
 @Validated
+@Log4j2
 public class BookService {
     private final BookRepository bookRepository;
 
@@ -36,9 +38,14 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public Book findBookByTitleOrThrow404(String title) {
+        return bookRepository.findBookByTitle(title)
+                .orElseThrow(()-> new NotFoundException("Book not found"));
+    }
+
     public Book findBookByIdOrThrow404(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not Found"));
+                .orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
     @Transactional
@@ -59,8 +66,8 @@ public class BookService {
     }
 
     @Transactional
-    public void rentABook(Long id, Loan idLoan) {
-        Book bookFounded = findBookByIdOrThrow404(id);
+    public void rentABook(String title, Loan idLoan) {
+        Book bookFounded = findBookByTitleOrThrow404(title);
         if (bookFounded.getIdLoan() != null) {
             throw new BadRequestException("This book is already rented");
         }
@@ -77,8 +84,8 @@ public class BookService {
     }
 
     @Transactional
-    public void returnABook(Long id) {
-        Book bookFounded = findBookByIdOrThrow404(id);
+    public void returnABook(String title) {
+        Book bookFounded = findBookByTitleOrThrow404(title);
         if (bookFounded.getIdLoan() == null) {
             throw new BadRequestException("This book has not been rented");
         }
@@ -89,7 +96,6 @@ public class BookService {
                 .isbn(bookFounded.getIsbn())
                 .idLoan(null)
                 .build();
-
         bookRepository.save(returnedBook);
     }
 }

@@ -3,6 +3,7 @@ package book.loan.system.integration;
 import book.loan.system.domain.APIClient;
 import book.loan.system.repository.APIClientRepository;
 import book.loan.system.util.APIClientCreator;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,21 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @AutoConfigureMockMvc
+@Log4j2
 public class AuthenticationControllerTestIT {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private APIClientRepository apiClientRepository;
 
-    @BeforeEach
-    void setup() {
-        APIClient testUser = APIClientCreator.createValidAPIClient();
-        apiClientRepository.save(testUser);
-    }
-
     String apiClientRegisterRequestBody = """
         {
-            "name": "Felipe Silva",
+            "name": "test",
                     "email": "felipe20@gmail.com",
                     "password": "123456",
                     "authorities": "ADMIN"
@@ -45,7 +42,7 @@ public class AuthenticationControllerTestIT {
     String apiClientLoginRequestBody = """
         {
             "email": "felipe20@gmail.com",
-                    "password": "123456"
+            "password": "123456"
         }
         """;
 

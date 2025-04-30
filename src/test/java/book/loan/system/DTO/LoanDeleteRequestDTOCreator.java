@@ -7,7 +7,7 @@ import book.loan.system.util.LoanCreator;
 public class LoanDeleteRequestDTOCreator {
     public static LoanDeleteRequestDTO createLoanDeleteRequestDTO(){
         return LoanDeleteRequestDTO.builder()
-                .idLoan(BookCreator.createBookRented().getId())
+                .bookTitle(BookCreator.createBookRented().getTitle())
                 .idLoan(LoanCreator.createValidLoan().getId())
                 .build();
 

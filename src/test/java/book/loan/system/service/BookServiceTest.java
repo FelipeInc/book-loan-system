@@ -42,6 +42,9 @@ class BookServiceTest {
         BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(BookCreator.createValidBook()));
 
+        BDDMockito.when(bookRepositoryMock.findBookByTitle(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(BookCreator.createValidBook()));
+
         BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
                 .thenReturn(BookCreator.createValidBook());
 
@@ -94,7 +97,7 @@ class BookServiceTest {
 
         Assertions.assertThatExceptionOfType(NotFoundException.class)
                 .isThrownBy(()->bookService.findBookByIdOrThrow404(1L))
-                .withMessageContaining("Book not Found");
+                .withMessageContaining("Book not found");
     }
 
     @Test
@@ -125,35 +128,32 @@ class BookServiceTest {
     @DisplayName("rentABook update idLoan when successful")
     void rentABook_UpdateIdLoan_WhenSuccessful() {
         BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
-                .thenReturn(BookCreator.createBookRented());
+                .thenReturn(BookCreator.createValidBook());
 
-        Assertions.assertThatCode(() -> bookService.rentABook(1L, LoanCreator.createValidLoan()))
+        Assertions.assertThatCode(() -> bookService.rentABook("title", LoanCreator.createValidLoan()))
                 .doesNotThrowAnyException();
     }
     @Test
     @DisplayName("rentABook Throw BadRequestException when book is already rented")
     void rentABook_ThrowBadRequestException_WhenBookIsAlreadyRented() {
-        BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
+        BDDMockito.when(bookRepositoryMock.findBookByTitle(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(BookCreator.createBookRented()));
 
-        BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
-                .thenReturn(BookCreator.createBookRented());
-
         Assertions.assertThatExceptionOfType(BadRequestException.class)
-                .isThrownBy(()-> bookService.rentABook(1L, LoanCreator.createValidLoan()))
+                .isThrownBy(()-> bookService.rentABook("title", LoanCreator.createValidLoan()))
                 .withMessageContaining("This book is already rented");
     }
 
     @Test
     @DisplayName("returnABook update idLoan when successful")
     void returnABook_UpdateIdLoan_WhenSuccessful() {
-        BDDMockito.when(bookRepositoryMock.findById(ArgumentMatchers.anyLong()))
+        BDDMockito.when(bookRepositoryMock.findBookByTitle(ArgumentMatchers.anyString()))
             .thenReturn(Optional.of(BookCreator.createBookRented()));
 
         BDDMockito.when(bookRepositoryMock.save(ArgumentMatchers.any(Book.class)))
                 .thenReturn(BookCreator.createBookRented());
 
-        Assertions.assertThatCode(() -> bookService.returnABook(1L))
+        Assertions.assertThatCode(() -> bookService.returnABook("title"))
                 .doesNotThrowAnyException();
     }
 
@@ -164,7 +164,7 @@ class BookServiceTest {
                 .thenReturn(BookCreator.createBookRented());
 
         Assertions.assertThatExceptionOfType(BadRequestException.class)
-                .isThrownBy(() -> bookService.returnABook(1L))
+                .isThrownBy(() -> bookService.returnABook("title"))
                 .withMessageContaining("This book has not been rented");
     }
 

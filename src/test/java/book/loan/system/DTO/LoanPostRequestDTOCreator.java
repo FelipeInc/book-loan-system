@@ -8,7 +8,7 @@ public class LoanPostRequestDTOCreator {
     public static LoanPostRequestDTO createLoanRequestDTO(){
         return LoanPostRequestDTO.builder()
                 .email(APIClientCreator.createUserToBeSaved().getEmail())
-                .id(BookCreator.createBookRented().getId())
+                .bookTitle(BookCreator.createBookRented().getTitle())
                 .build();
     }
 }

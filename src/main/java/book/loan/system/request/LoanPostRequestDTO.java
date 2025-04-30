@@ -12,5 +12,5 @@ public record LoanPostRequestDTO(
         @Email(message = "Enter a valid email address")
         String email,
 
-        Long id) {
+        String bookTitle) {
 }

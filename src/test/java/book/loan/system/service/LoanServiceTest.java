@@ -58,9 +58,9 @@ class LoanServiceTest {
         BDDMockito.when(apiClientService.findUserByEmailOrThrowNotFoundException(ArgumentMatchers.anyString()))
                         .thenReturn(APIClientCreator.createValidAPIClient());
 
-        BDDMockito.doNothing().when(bookServiceMock).returnABook(ArgumentMatchers.anyLong());
+        BDDMockito.doNothing().when(bookServiceMock).returnABook(ArgumentMatchers.anyString());
 
-        BDDMockito.doNothing().when(bookServiceMock).rentABook(ArgumentMatchers.anyLong(),ArgumentMatchers.any(Loan.class));
+        BDDMockito.doNothing().when(bookServiceMock).rentABook(ArgumentMatchers.anyString(),ArgumentMatchers.any(Loan.class));
 
         BDDMockito.doNothing().when(loanRepositoryMock).delete(ArgumentMatchers.any(Loan.class));
 

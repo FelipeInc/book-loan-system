@@ -29,7 +29,7 @@ public class LoanController {
         return ResponseEntity.ok(loanService.findLoanByIDorThrows404(id));
     }
 
-    @PostMapping(path = "/return/book")
+    @DeleteMapping(path = "/return/book")
     public ResponseEntity<Loan> deleteLoan(@RequestBody @Valid LoanDeleteRequestDTO loanDeletePostDTO){
         loanService.deleteLoan(loanDeletePostDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

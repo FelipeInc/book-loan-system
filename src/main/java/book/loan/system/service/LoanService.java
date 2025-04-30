@@ -32,12 +32,11 @@ public class LoanService {
         return loanRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Loan not Found"));
     }
-
     @Transactional
     public Loan createLoan(LoanPostRequestDTO loanPostRequestDTO) {
         APIClient clientFound = apiClientService.findUserByEmailOrThrowNotFoundException(loanPostRequestDTO.email());
 
-        Book book = bookService.findBookByIdOrThrow404(loanPostRequestDTO.id());
+        Book book = bookService.findBookByTitleOrThrow404(loanPostRequestDTO.bookTitle());
 
         Loan loan = Loan.builder()
                 .userEmail(clientFound)
@@ -47,14 +46,14 @@ public class LoanService {
                 .build();
         Loan loanSaved = loanRepository.save(loan);
 
-        bookService.rentABook(loanPostRequestDTO.id(), loan);
+        bookService.rentABook(loanPostRequestDTO.bookTitle(), loan);
 
         return loanSaved;
     }
 
     @Transactional
     public void deleteLoan(LoanDeleteRequestDTO loanDeletePostDTO) {
-        bookService.returnABook(loanDeletePostDTO.idBook());
+        bookService.returnABook(loanDeletePostDTO.bookTitle());
 
         Loan loan = findLoanByIDorThrows404(loanDeletePostDTO.idLoan());
         loan.setBookRented(null);

@@ -1,48 +1,55 @@
 package book.loan.system.service;
 
 import book.loan.system.domain.Book;
+import book.loan.system.domain.Loan;
 import book.loan.system.exception.BadRequestException;
+import book.loan.system.exception.NotFoundException;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.request.BookPostRequestDTO;
 import book.loan.system.request.BookPutRequestDTO;
-import book.loan.system.validator.Validator;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
 
 @Service
 @RequiredArgsConstructor
-public class BookService  {
-    private final Validator validator;
+@Validated
+@Log4j2
+public class BookService {
     private final BookRepository bookRepository;
 
-    public Page<Book> listAll(Pageable pageable){
+    public Page<Book> listAll(Pageable pageable) {
         return bookRepository.findAll(pageable);
     }
 
-    public Book save(BookPostRequestDTO bookPostRequestDTO){
-        if(bookPostRequestDTO.isbn().toString().isEmpty()){
-            throw new BadRequestException("The ISBN cannot be Empty");
-        }
-
+    @Transactional
+    public Book saveBook(@Valid BookPostRequestDTO bookPostRequestDTO) {
         Book book = Book.builder()
-                .author(validator.authorNameValidator(bookPostRequestDTO.author()))
-                .title(validator.bookTitleValidator(bookPostRequestDTO.author()))
-                .isbn(validator.isbnValidator(bookPostRequestDTO.isbn()))
+                .author(bookPostRequestDTO.author())
+                .title(bookPostRequestDTO.title())
+                .isbn(bookPostRequestDTO.isbn())
                 .build();
         return bookRepository.save(book);
     }
 
-    public Book findBookByIdOrThrow404(Long id){
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not Found"));
+    public Book findBookByTitleOrThrow404(String title) {
+        return bookRepository.findBookByTitle(title)
+                .orElseThrow(()-> new NotFoundException("Book not found"));
     }
 
-    public void updateBook(BookPutRequestDTO bookPutRequestBody){
+    public Book findBookByIdOrThrow404(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book not found"));
+    }
+
+    @Transactional
+    public void updateBook(BookPutRequestDTO bookPutRequestBody) {
         findBookByIdOrThrow404(bookPutRequestBody.id());
         Book updatedBook = Book.builder()
                 .id(bookPutRequestBody.id())
@@ -53,7 +60,42 @@ public class BookService  {
         bookRepository.save(updatedBook);
     }
 
-    public void delete(Long id){
+    @Transactional
+    public void delete(Long id) {
         bookRepository.delete(findBookByIdOrThrow404(id));
+    }
+
+    @Transactional
+    public void rentABook(String title, Loan idLoan) {
+        Book bookFounded = findBookByTitleOrThrow404(title);
+        if (bookFounded.getIdLoan() != null) {
+            throw new BadRequestException("This book is already rented");
+        }
+        Book rentedBook = Book.builder()
+                .id(bookFounded.getId())
+                .title(bookFounded.getTitle())
+                .author(bookFounded.getAuthor())
+                .isbn(bookFounded.getIsbn())
+                .idLoan(idLoan)
+                .build();
+
+        bookRepository.save(rentedBook);
+
+    }
+
+    @Transactional
+    public void returnABook(String title) {
+        Book bookFounded = findBookByTitleOrThrow404(title);
+        if (bookFounded.getIdLoan() == null) {
+            throw new BadRequestException("This book has not been rented");
+        }
+        Book returnedBook = Book.builder()
+                .id(bookFounded.getId())
+                .title(bookFounded.getTitle())
+                .author(bookFounded.getAuthor())
+                .isbn(bookFounded.getIsbn())
+                .idLoan(null)
+                .build();
+        bookRepository.save(returnedBook);
     }
 }

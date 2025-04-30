@@ -1,5 +1,8 @@
 server:
   error:
+    whitelabel:
+      enabled: false
+    include-message: always
     include_stacktrace: on_param
 
 spring:

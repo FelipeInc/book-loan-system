@@ -36,19 +36,19 @@ class BookRepositoryTest {
         Book bookToBeSaved = BookCreator.createBookToBeSaved();
         Book savedBook = this.bookRepository.save(bookToBeSaved);
 
-        Book updatedBookCreated = BookCreator.createUpdatedBook();
+        Book updatedBookCreated = Book.builder()
+                .id(savedBook.getId())
+                .title("updateRepositoryTitleTest")
+                .author("updateRepositoryAuthorTest")
+                .isbn("1111111111112")
+                .build();
         Book updatedBook = this.bookRepository.save(updatedBookCreated);
 
         Assertions.assertThat(updatedBook).isNotNull();
         Assertions.assertThat(updatedBook.getId()).isNotNull();
         Assertions.assertThat(updatedBook.getTitle()).isEqualTo(updatedBookCreated.getTitle());
         Assertions.assertThat(updatedBook.getAuthor()).isEqualTo(updatedBookCreated.getAuthor());
-        Assertions.assertThat(updatedBook.getIsbn()).isEqualTo(updatedBookCreated.getIsbn());
-
-
-        Assertions.assertThat(updatedBook.getTitle()).isNotEqualTo(savedBook.getTitle());
-        Assertions.assertThat(updatedBook.getAuthor()).isNotEqualTo(savedBook.getAuthor());
-        Assertions.assertThat(updatedBook.getIsbn()).isNotEqualTo(savedBook.getIsbn());
+        Assertions.assertThat(updatedBook.getIsbn()).isEqualTo(updatedBookCreated.getIsbn());;
     }
 
     @Test

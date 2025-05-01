@@ -3,8 +3,13 @@
 ![JavaSpring](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=black)
 
 # About Book Loan API
-### Book Loan API is a independent project
+Book Loan API is the first project that I make. Made with Java Spring this API has book management and loan methods,
+users authentication with JWT and connection with database Mysql.
 
+## Technologies used
+Docker 2.4
+Java 21.0.1
+Maven 4.0
 
 
 

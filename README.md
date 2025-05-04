@@ -12,4 +12,63 @@ Java 21.0.1
 Maven 4.0
 
 
+# Methods
 
+## Book Controller
+### Method Save
+![PUT](https://img.shields.io/badge/HTTP-POST-default)  /api/v1/books/save  
+#### Parameters
+No parameters required
+
+### Request Body ![Required ](https://img.shields.io/badge/-Required-red?style=flat&logo=probot&logoColor=white)
+ Application/Json
+
+### Request body example
+``` 
+{
+  "title": "string",
+  "author": "string",
+  "isbn": "1934919771046"
+}
+
+```
+### Responses
+
+#### Code | Description
+200 | OK
+#### Media Type
+ */ *
+##### Controls Accept Header
+
+### Response example
+``` 
+{
+  "id": 9007199254740991,
+  "title": "string",
+  "author": "string",
+  "isbn": "8502576017943"
+}
+
+```
+
+### Method Update
+![PUT](https://img.shields.io/badge/HTTP-PUT-yellow)  /api/v1/books/update
+### Parameters
+No parameters required
+
+### Request Body ![Required ](https://img.shields.io/badge/-Required-red?style=flat&logo=probot&logoColor=white)
+Application/Json
+
+### Request body example
+``` 
+{
+  "id": 9007199254740991,
+  "title": "string",
+  "author": "string",
+  "isbn": "8502576017943"
+}
+```
+### Responses
+
+#### Code | Description
+200 | OK

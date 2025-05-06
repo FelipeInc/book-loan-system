@@ -10,65 +10,11 @@ users authentication with JWT and connection with database Mysql.
 Docker 2.4
 Java 21.0.1
 Maven 4.0
+## How run the application
+1- Open Docker
+2- Run ``` docker-compose up ``` in the terminal to initialize the database
+3- Run the class ApplicationStart do initialize the API
 
-
-# Methods
-
-## Book Controller
-### Method Save
-![PUT](https://img.shields.io/badge/HTTP-POST-default)  /api/v1/books/save  
-#### Parameters
-No parameters required
-
-### Request Body ![Required ](https://img.shields.io/badge/-Required-red?style=flat&logo=probot&logoColor=white)
- Application/Json
-
-### Request body example
-``` 
-{
-  "title": "string",
-  "author": "string",
-  "isbn": "1934919771046"
-}
-
-```
-### Responses
-
-#### Code | Description
-200 | OK
-#### Media Type
- */ *
-##### Controls Accept Header
-
-### Response example
-``` 
-{
-  "id": 9007199254740991,
-  "title": "string",
-  "author": "string",
-  "isbn": "8502576017943"
-}
-
-```
-
-### Method Update
-![PUT](https://img.shields.io/badge/HTTP-PUT-yellow)  /api/v1/books/update
-### Parameters
-No parameters required
-
-### Request Body ![Required ](https://img.shields.io/badge/-Required-red?style=flat&logo=probot&logoColor=white)
-Application/Json
-
-### Request body example
-``` 
-{
-  "id": 9007199254740991,
-  "title": "string",
-  "author": "string",
-  "isbn": "8502576017943"
-}
-```
-### Responses
-
-#### Code | Description
-200 | OK
+## How access Swagger documentation
+1- Run the application
+2- Go to this web site ``` http://localhost:8080/swagger-ui/index.html#/ ```

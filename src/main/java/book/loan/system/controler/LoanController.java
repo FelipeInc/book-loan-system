@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/books/loan")
+@RequestMapping("/api/v1/books/loan")
 @RequiredArgsConstructor
 public class LoanController {
     @Autowired

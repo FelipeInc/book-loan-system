@@ -37,17 +37,22 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET, "api/v1/books/find/{title}").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET,"api/v1/books/loan/find").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "api/v1/books").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "api/v1/books/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "api/v1/books/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "api/v1/books/save").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "api/v1/books/loan/return/book").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "api/v1/books/loan/rent").hasRole("USER")
-                        .requestMatchers(HttpMethod.PUT, "api/v1/books/update").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "api/v1/books/delete/{id}").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books/find/{title}").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/books/loan/find").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books/{id}").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books/find/{title}").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/books/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/books/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/books/save").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/books/loan/rent").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/books/update").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/books/loan/return/book").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/books/delete/{id}").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

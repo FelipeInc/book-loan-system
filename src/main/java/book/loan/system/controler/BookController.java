@@ -4,9 +4,11 @@ import book.loan.system.domain.Book;
 import book.loan.system.request.BookPostRequestDTO;
 import book.loan.system.request.BookPutRequestDTO;
 import book.loan.system.service.BookService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/books")
+@RequestMapping("/api/v1/books")
 @Log4j2
 @RequiredArgsConstructor
 public class BookController {
@@ -23,7 +25,7 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    public ResponseEntity<Page<Book>> list(Pageable pageable) {
+    public ResponseEntity<Page<Book>> list(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(bookService.listAll(pageable));
     }
 

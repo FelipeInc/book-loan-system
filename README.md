@@ -72,6 +72,8 @@ cd book-loan-system
 
 ```
 
+---
+
 ### Create a docker-compose.yml file in the project root (if not present):
 ```
 
@@ -91,6 +93,8 @@ volumes:
 
 ```
 
+---
+
 ### Start Docker Compose:
 
 ```
@@ -98,6 +102,8 @@ volumes:
 docker-compose up
 
 ```
+
+---
 
 ### Run the project in IntelliJ
 
@@ -115,12 +121,16 @@ Usually located in src/main/java/book/loan/system/ApplicationStart.java
 
 ```
 
+---
+
 ## Swagger documentation
 ``` 
 1- Run the application
 
 2- Go to this web site  http://localhost:8080/swagger-ui/index.html#/ 
 ```
+
+---
 
 ## Developer
 

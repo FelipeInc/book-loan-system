@@ -4,7 +4,6 @@ import book.loan.system.domain.Book;
 import book.loan.system.request.BookPostRequestDTO;
 import book.loan.system.request.BookPutRequestDTO;
 import book.loan.system.service.BookService;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

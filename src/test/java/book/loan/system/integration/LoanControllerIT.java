@@ -1,14 +1,11 @@
 package book.loan.system.integration;
 
-import book.loan.system.DTO.LoanDeleteRequestDTOCreator;
-import book.loan.system.DTO.LoanPostRequestDTOCreator;
 import book.loan.system.domain.APIClient;
 import book.loan.system.domain.Book;
 import book.loan.system.domain.Loan;
 import book.loan.system.repository.APIClientRepository;
 import book.loan.system.repository.BookRepository;
 import book.loan.system.repository.LoanRepository;
-import book.loan.system.request.LoanDeleteRequestDTO;
 import book.loan.system.request.LoanPostRequestDTO;
 import book.loan.system.service.LoanService;
 import book.loan.system.util.APIClientCreator;
@@ -33,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class LoanControllerIT {
     @Autowired
-    private MockMvc mockMvc;
+    private  MockMvc mockMvc;
 
     @Autowired
     private BookRepository bookRepository;
@@ -75,7 +72,7 @@ public class LoanControllerIT {
                 .build();
         bookRepository.save(testBook);
 
-        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControlerTestIT();
+        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControllerTestIT();
         apiClientRepository.save(testUser);
 
         Loan loan = loanService.createLoan(LoanPostRequestDTO.builder()
@@ -105,7 +102,7 @@ public class LoanControllerIT {
                 .build();
         bookRepository.save(testBook);
 
-        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControlerTestIT();
+        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControllerTestIT();
         apiClientRepository.save(testUser);
 
         Loan loan = loanService.createLoan(LoanPostRequestDTO.builder()
@@ -134,7 +131,7 @@ public class LoanControllerIT {
                 .build();
         Book saved = bookRepository.save(book);
 
-        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControlerTestIT();
+        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControllerTestIT();
         apiClientRepository.save(testUser);
 
         mockMvc.perform(post("/api/v1/books/loan/rent")
@@ -153,7 +150,7 @@ public class LoanControllerIT {
         Book testBook = BookCreator.createBookToBeSaved();
         bookRepository.save(testBook);
 
-        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControlerTestIT();
+        APIClient testUser = APIClientCreator.createUserToBeSavedLoanControllerTestIT();
         apiClientRepository.save(testUser);
 
         loanService.createLoan(LoanPostRequestDTO.builder()
@@ -164,7 +161,7 @@ public class LoanControllerIT {
         String loanDeleteRequestDTO = """
         {
             "idLoan": "1",
-            "bookTitle": "O Pequeno Principe"
+            "bookTitle": "titleBookTest"
         }
         """;
 
